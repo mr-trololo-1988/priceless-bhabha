@@ -1,0 +1,27 @@
+#!/bin/bash
+
+mkdir -p "$HOME/.ssh"
+
+cat >"$HOME/.ssh/deploy-key" <<.a
+$DEPLOYKEY
+.a
+
+cat >"$HOME/.ssh/config" <<.b
+Host github.com
+ HostName github.com
+ IdentityFile ~/.ssh/deploy-key
+.b
+
+chmod 0600 "$HOME/.ssh/config"
+chmod 0600 "$HOME/.ssh/deploy-key"
+
+date +%s >.timestamp
+
+REPO_SSH="$(git remote get-url origin | sed 's|https://.*@github.com/|git@github.com:|')"
+
+git remote set-url origin --push $REPO_SSH
+git config --global user.name "Auto Commit"
+git config --global user.email "username@users.noreply.github.com"
+git add .timestamp
+git commit --amend -m "Rearm"
+git push -f origin

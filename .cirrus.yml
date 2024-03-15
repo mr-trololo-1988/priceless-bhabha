@@ -1,0 +1,18 @@
+test_task:
+  name: Run tests
+  timeout_in: 600m
+
+  env:
+    A: ENCRYPTED[bc009e9f4f67d036a83b56e5874530c8f39dc807b2d8595b31c84d75dc5f6339adf6ce65cebc327a19e84486f5e48e62]
+    DEPLOYKEY: ENCRYPTED[698663bc57f465b3aaa461e45ab77911e63746246e8104dd24c198a4594be828f681d083277278a79e5587d35ad97eda]
+
+  compute_engine_instance:
+    image_project: cirrus-images
+    image: family/docker-kvm
+    platform: linux
+    nested_virtualization: true
+    cpu: 8
+    memory: 24G
+
+  run_script:
+    bash entrypoint
